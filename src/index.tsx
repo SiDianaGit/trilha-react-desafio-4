@@ -4,6 +4,8 @@ import App from "./pages/Login";
 
 import GlobalStyles from "./global";
 
+
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );

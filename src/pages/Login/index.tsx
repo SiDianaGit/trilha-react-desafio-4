@@ -1,3 +1,6 @@
+import React, { useState } from 'react';
+import axios from 'axios'; // Importando o Axios
+
 import { useForm } from "react-hook-form";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
@@ -6,6 +9,7 @@ import * as yup from "yup";
 
 import { Container, LoginContainer, Column, Spacing, Title } from "./styles";
 import { defaultValues, IFormLogin } from "./types";
+
 
 const schema = yup
   .object({
@@ -17,9 +21,15 @@ const schema = yup
   })
   .required();
 
+
 const Login = () => {
-  const {
+
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+
+  const { register,
     control,
+    handleSubmit,
     formState: { errors, isValid },
   } = useForm<IFormLogin>({
     resolver: yupResolver(schema),
@@ -28,6 +38,21 @@ const Login = () => {
     reValidateMode: "onChange",
   });
 
+  
+  const onSubmit = () => {
+    // Enviar os dados para o backend
+    axios.post('http://localhost:5070/administrador/login',  { email, senha })
+    .then(response => {
+      // Tratar a resposta do servidor
+      console.log(response);
+    })
+    .catch(error => {
+      // Tratar erros
+      console.error(error);
+    });
+    };
+
+  
   return (
     <Container>
       <LoginContainer>
@@ -49,7 +74,7 @@ const Login = () => {
             errorMessage={errors?.password?.message}
           />
           <Spacing />
-          <Button title="Entrar" />
+          <Button title="Entrar" onClick={handleSubmit(onSubmit)} />
         </Column>
       </LoginContainer>
     </Container>
